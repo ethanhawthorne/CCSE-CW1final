@@ -1,0 +1,165 @@
+﻿@page
+@model ViewBookingsModel
+@{
+    ViewData["Title"] = "ViewBookings";
+}
+
+<h2>Your bookings</h2>
+<p>Any bookings you have made will be displayed here</p>
+<hr />
+<p class="text-success">@Model.ViewBookingsTable.SuccessMessage</p>
+<form id="hotelTableForm" method="post" asp-page-handler="HotelTable">
+    <h3>Hotels</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Room Type</th>
+                            <th>Check-in Date</th>
+                            <th>Check-out Date</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <input type="hidden" id="hotelBookingIdInput" name="hotelBookingId" value="">
+                        @foreach (var item in Model.ViewBookingsTable.HotelBookingsList)
+                        {
+                            <tr>
+                                <td>@item.Hotel.Name</td>
+                                <td>@item.Hotel.RoomType</td>
+                                <td>@item.CheckInDate.ToShortDateString()</td>
+                                <td>@item.CheckOutDate.ToShortDateString()</td>
+                                <td>@("£" + ((item.CheckOutDate - item.CheckInDate).Days * item.Hotel.Cost).ToString("0.00"))</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <input type="submit" class="btn btn-primary" name="command" value="Edit" onclick="submitForm('hotelBookingIdInput', 'hotelTableForm', '@item.HotelBookingId')" />
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <input type="submit" class="btn btn-danger" name="command" value="Cancel" onclick="onCancelClick('hotelBookingIdInput', 'hotelTableForm', '@item.HotelBookingId')" />
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+<form id="tourTableForm" method="post" asp-page-handler="TourTable">
+    <h3>Tours</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Duration (Days)</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <input type="hidden" id="tourBookingIdInput" name="tourBookingId" value="">
+                        @foreach (var item in Model.ViewBookingsTable.TourBookingsList)
+                        {
+                            <tr>
+                                <td>@item.Tour.Name</td>
+                                <td>@item.Tour.DurationInDays</td>
+                                <td>@item.TourStartDate.ToShortDateString()</td>
+                                <td>@item.TourEndDate.ToShortDateString()</td>
+                                <td>@("£" + ((item.TourEndDate - item.TourStartDate).Days * item.Tour.Cost).ToString("0.00"))</td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <input type="submit" class="btn btn-primary" name="command" value="Edit" onclick="submitForm('tourBookingIdInput', 'tourTableForm', '@item.TourBookingId')" />
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <input type="submit" class="btn btn-danger" name="command" value="Cancel" onclick="onCancelClick('tourBookingIdInput', 'tourTableForm', '@item.TourBookingId')" />
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+<form id="packageTableForm" method="post" asp-page-handler="PackageTable">
+    <h3>Packages</h3>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Hotel</th>
+                            <th>Room Type</th>
+                            <th>Check-in Date</th>
+                            <th>Check-out Date</th>
+                            <th>Tour</th>
+                            <th>Duration (Days)</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <input type="hidden" id="packageBookingIdInput" name="packageBookingId" value="">
+                        @foreach (var item in Model.ViewBookingsTable.PackageBookingsList)
+                        {
+                            <tr>
+                                <td>@item.Hotel.Name</td>
+                                <td>@item.Hotel.RoomType</td>
+                                <td>@item.CheckInDate.ToShortDateString()</td>
+                                <td>@item.CheckOutDate.ToShortDateString()</td>
+                                <td>@item.Tour.Name</td>
+                                <td>@item.Tour.DurationInDays</td>
+                                <td>@item.TourStartDate.ToShortDateString()</td>
+                                <td>@item.TourEndDate.ToShortDateString()</td>
+                                <td>
+                                    @{
+                                        var hotelCost = (item.CheckOutDate - item.CheckInDate).Days * item.Hotel.Cost;
+                                        var tourCost = (item.TourEndDate - item.TourStartDate).Days * item.Tour.Cost;
+                                        var totalCost = hotelCost + tourCost;
+                                    }
+                                    @("£" + totalCost.ToString("0.00"))
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <input type="submit" class="btn btn-primary" name="command" value="Edit" onclick="submitForm('packageBookingIdInput', 'packageTableForm', '@item.PackageBookingId')" />
+                                    </div>
+                                    <div class="btn-group" role="group">
+                                        <input type="submit" class="btn btn-danger" name="command" value="Cancel" onclick="onCancelClick('packageBookingIdInput', 'packageTableForm', '@item.PackageBookingId')" />
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    function onCancelClick(bookingInputId, submitFormId, bookingId) {
+        var isConfirmed = window.confirm("Are you sure you want to cancel your booking?");
+
+        if (isConfirmed) {
+            submitForm(bookingInputId, submitFormId, bookingId)
+        }
+    }
+
+    function submitForm(bookingInputId, submitFormId, bookingId) {
+        var form = document.getElementById(submitFormId);
+        document.getElementById(bookingInputId).value = bookingId;
+        form.submit();
+    }
+</script>
