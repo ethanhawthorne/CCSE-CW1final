@@ -1,5 +1,7 @@
-﻿namespace asp_net_core_web_app_authentication_authorisation.Models
+﻿namespace My_Pacific_Tour_App.Models
 {
+    //This represents the class "HotelAvailability" that holds the properties i will be manipulating throughout the project
+
     public class HotelAvailability
     {
         public Guid HotelAvailabilityId { get; set; }

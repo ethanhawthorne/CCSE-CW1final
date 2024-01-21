@@ -1,5 +1,5 @@
-using asp_net_core_web_app_authentication_authorisation.Models;
-using asp_net_core_web_app_authentication_authorisation.Services;
+using My_Pacific_Tour_App.Models;
+using My_Pacific_Tour_App.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -7,8 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace asp_net_core_web_app_authentication_authorisation.Pages
+namespace My_Pacific_Tour_App.Pages
 {
+    //Binds to the relevant razor page
     public class BookingsModel : PageModel
     {
         [BindProperty]
@@ -17,21 +18,18 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
         [BindProperty]
         public TourSearchModel TourSearch { get; set; }
 
-        [BindProperty]
-        public PackageBookModel PackageBook { get; set; }
 
         private readonly ApplicationDbContext _dbContext;
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public BookingsModel(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+        private readonly UserManager<User> _userManager;
+        // Initializes and sets context through dependancy injection
+        public BookingsModel(ApplicationDbContext dbContext, UserManager<User> userManager)
         { 
             HotelSearch = new HotelSearchModel();
             TourSearch = new TourSearchModel();
-            PackageBook = new PackageBookModel();
             _dbContext = dbContext;
             _userManager = userManager;
         }
-
+        //gives validation when a user is inputting data
         public class HotelSearchModel
         {
             [Required(ErrorMessage = "Please select a check-in date")]
@@ -48,7 +46,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
             [DataType(DataType.Text)]
             [Display(Name = "Room type")]
             public string RoomType { get; set; } = "Single";
-
+            //list of all choices a user can make
             public List<SelectListItem> RoomTypes { get; set; } = new List<SelectListItem>
             {
                 new SelectListItem
@@ -70,7 +68,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
 
             public List<Hotel> HotelsList { get; set; } = new List<Hotel>();
         }
-
+        //same idea of validation but for tours
         public class TourSearchModel
         {
             [Required(ErrorMessage = "Please select a tour start date")]
@@ -87,7 +85,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
 
             public List<Tour> ToursList { get; set; } = new List<Tour>();
         }
-
+        //more validation
         public class PackageBookModel
         {
             [Required(ErrorMessage = "Please select a check-in date")]
@@ -104,7 +102,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
             [DataType(DataType.Text)]
             [Display(Name = "Room type")]
             public string RoomType { get; set; } = "Single";
-
+            //list choices
             public List<SelectListItem> RoomTypes { get; set; } = new List<SelectListItem>
             {
                 new SelectListItem
@@ -123,7 +121,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
                     Text = "Family Suite"
                 }
             };
-
+            //validation
             public List<Hotel> HotelsList { get; set; } = new List<Hotel>();
 
             [Required(ErrorMessage = "Please select a tour start date")]
@@ -138,16 +136,19 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
 
             public List<Tour> ToursList { get; set; } = new List<Tour>();
         }
-
+        //seaches for relevant hotels
         public async Task<IActionResult> OnPostHotelSearchAsync(string command, string returnUrl = null)
         {
+            //checks the model state is valud
             if (!ModelState.IsValid)
             {
+                //if not return page to give validation errors
                 return Page();
             }
-
+            //make sure the command is search which should alwat be the case with button press
             if (command == "Search")
             {
+                //finds hotel with relevant criteria
                 var availableHotels = await _dbContext.HotelAvailabilities
                     .Where(ha =>
                         ha.AvailableFrom <= HotelSearch.CheckInDate &&
@@ -156,17 +157,21 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
                     .Select(ha => ha.Hotel)
                     .Distinct()
                     .ToListAsync();
-
+                //populate the hotel list with relevant hotels
                 HotelSearch.HotelsList = availableHotels;
-
+                //returns and displays results
                 return Page();
             }
+            //This happens when the book button is pressed instead
             else
             {
+                //gets the selected hotel
                 var SelectedHotelId = new Guid(Request.Form["hotels"]);
+                //gets the current user
                 var CurrentUser = await _userManager.GetUserAsync(User);
                 Hotel SelectedHotel = await _dbContext.Hotels.FindAsync(SelectedHotelId);
 
+                //writes a new booking
                 var hotelBooking = new HotelBooking
                 {
                     HotelBookingId = new Guid(),
@@ -175,12 +180,12 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
                     CheckInDate = HotelSearch.CheckInDate,
                     CheckOutDate = HotelSearch.CheckOutDate,
                     Hotel = SelectedHotel,
-                    ApplicationUser = CurrentUser
+                    User = CurrentUser
                 };
 
                 _dbContext.HotelBookings.Add(hotelBooking);
                 await _dbContext.SaveChangesAsync();
-
+                //brings user to the payment page
                 return RedirectToPage("/Payment", new
                 {
                     bookingId = hotelBooking.HotelBookingId.ToString(),
@@ -188,7 +193,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
                 });
             }
         }
-
+        //same as above but for tours
         public async Task<IActionResult> OnPostTourSearchAsync(string command, string returnUrl = null)
         {
             if (!ModelState.IsValid)
@@ -223,7 +228,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
                     TourStartDate = TourSearch.TourStartDate,
                     TourEndDate = TourSearch.TourEndDate,
                     Tour = SelectedTour,
-                    ApplicationUser = CurrentUser
+                    User = CurrentUser
                 };
 
                 _dbContext.TourBookings.Add(tourBooking);
@@ -237,70 +242,5 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
             }
         }
 
-        public async Task<IActionResult> OnPostPackageBookAsync(string command, string returnUrl = null)
-        {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-
-            if (command == "Search")
-            {
-                var availableHotels = await _dbContext.HotelAvailabilities
-                .Where(ha =>
-                    ha.AvailableFrom <= PackageBook.CheckInDate && ha.AvailableTo >= PackageBook.CheckOutDate)
-                .Select(ha => ha.Hotel)
-                .Distinct()
-                .ToListAsync();
-
-                PackageBook.HotelsList = availableHotels;
-
-                var availableTours = await _dbContext.TourAvailabilities
-                    .Where(ta =>
-                        ta.AvailableFrom <= PackageBook.TourStartDate && ta.AvailableTo >= PackageBook.TourEndDate)
-                    .Select(ta => ta.Tour)
-                    .Distinct()
-                    .ToListAsync();
-
-                PackageBook.ToursList = availableTours;
-
-                return Page();
-            }
-            else
-            {
-                var CurrentUser = await _userManager.GetUserAsync(User);
-
-                var SelectedHotelId = new Guid(Request.Form["packageHotelsDropdown"]);
-                Hotel SelectedHotel = await _dbContext.Hotels.FindAsync(SelectedHotelId);
-
-                var SelectedTourId = new Guid(Request.Form["packageToursDropdown"]);
-                Tour SelectedTour = await _dbContext.Tours.FindAsync(SelectedTourId);
-
-                var packageBooking = new PackageBooking
-                {
-                    PackageBookingId = new Guid(),
-                    UserId = CurrentUser.Id,
-                    HotelId = SelectedHotelId,
-                    CheckInDate = PackageBook.CheckInDate,
-                    CheckOutDate = PackageBook.CheckOutDate,
-                    TourId = SelectedTourId,
-                    TourStartDate = PackageBook.TourStartDate,
-                    TourEndDate = PackageBook.TourEndDate,
-                    Hotel = SelectedHotel,
-                    Tour = SelectedTour,
-                    ApplicationUser = CurrentUser
-                };
-
-                _dbContext.PackageBookings.Add(packageBooking);
-
-                await _dbContext.SaveChangesAsync();
-
-                return RedirectToPage("/Payment", new
-                {
-                    bookingId = packageBooking.PackageBookingId.ToString(),
-                    bookingType = "package"
-                });
-            }
-        }
     }
 }

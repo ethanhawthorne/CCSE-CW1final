@@ -1,12 +1,13 @@
-using asp_net_core_web_app_authentication_authorisation.Models;
-using asp_net_core_web_app_authentication_authorisation.Services;
+using My_Pacific_Tour_App.Models;
+using My_Pacific_Tour_App.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
-
-namespace asp_net_core_web_app_authentication_authorisation.Pages
+//This is responsible for editng the tour bookings
+//It is extremely simlar to hotel bookings but i will still go through and comment through the logic
+namespace My_Pacific_Tour_App.Pages
 {
     public class EditTourBookingModel : PageModel
     {
@@ -14,23 +15,23 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
         public EditBookingModel EditBooking { get; set; }
 
         private readonly ApplicationDbContext _dbContext;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public EditTourBookingModel(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+        public EditTourBookingModel(ApplicationDbContext dbContext, UserManager<User> userManager)
         {
             EditBooking = new EditBookingModel();
             _dbContext = dbContext;
             _userManager = userManager;
         }
-
+        //This validation for when users attempt to change tour bookings
         public class EditBookingModel
         {
-            [Required(ErrorMessage = "Please select a tour start date")]
+            [Required(ErrorMessage = "Select a tour start date")]
             [DataType(DataType.DateTime)]
             [Display(Name = "Tour start date")]
             public DateTime TourStartDate { get; set; }
 
-            [Required(ErrorMessage = "Please select a tour end date")]
+            [Required(ErrorMessage = "Select a tour end date")]
             [DataType(DataType.DateTime)]
             [Display(Name = "Tour end date")]
             public DateTime TourEndDate { get; set; }
@@ -41,7 +42,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
 
             public string ErrorMessage { get; set; }
         }
-
+        //Retrieves tour details based on the given tour ID
         public async Task<IActionResult> OnGet()
         {
             var TourBookingIdValue = Request.Query["tourBookingId"];
@@ -60,6 +61,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Pages
 
             return Page();
         }
+        //Checks that there is availability of tours for users choice
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {

@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace asp_net_core_web_app_authentication_authorisation.Migrations
 {
     /// <inheritdoc />
-    public partial class FirsteverMigration : Migration
+    public partial class Firstdbmigrations : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -254,44 +256,6 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PackageBookings",
-                columns: table => new
-                {
-                    PackageBookingId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    HotelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CheckInDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CheckOutDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TourId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TourStartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TourEndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsCancelled = table.Column<bool>(type: "bit", nullable: false),
-                    IsPaid = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PackageBookings", x => x.PackageBookingId);
-                    table.ForeignKey(
-                        name: "FK_PackageBookings_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PackageBookings_Hotels_HotelId",
-                        column: x => x.HotelId,
-                        principalTable: "Hotels",
-                        principalColumn: "HotelId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_PackageBookings_Tours_TourId",
-                        column: x => x.TourId,
-                        principalTable: "Tours",
-                        principalColumn: "TourId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TourAvailabilities",
                 columns: table => new
                 {
@@ -339,6 +303,41 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                         principalColumn: "TourId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.InsertData(
+                table: "Hotels",
+                columns: new[] { "HotelId", "AvailableSpaces", "Cost", "Name", "RoomType" },
+                values: new object[,]
+                {
+                    { new Guid("207f790c-2ff5-4624-b39c-735584a35269"), 20, 300m, "LondonMarriotHotel", "double" },
+                    { new Guid("99b4fff7-ef38-4ce8-9aad-65393d5c9f18"), 20, 300m, "LondonMarriotHotel", "Double" },
+                    { new Guid("bf8a64d5-8281-48fa-885f-a461e46af6fd"), 20, 300m, "LondonMarriotHotel", "family suite" },
+                    { new Guid("c09fc506-a50c-45c1-871f-3e7fc9b74892"), 20, 375m, "HiltonLondonHotel", "single" },
+                    { new Guid("c2d2af4e-27ef-48fd-b425-e51fb1e0a7c8"), 20, 775m, "HiltonLondonHotel", "double" },
+                    { new Guid("df332196-0602-4b42-b3d5-62d4f099416c"), 20, 300m, "LondonMarriotHotel", "family suite" },
+                    { new Guid("e02bf361-74fd-49d1-8546-fba73629fcc1"), 20, 300m, "LondonMarriotHotel", "single" },
+                    { new Guid("e22b9fd9-bfe9-4925-be41-e880b3ad1d7b"), 20, 300m, "LondonMarriotHotel", "single" },
+                    { new Guid("eec71ffb-7b0c-402d-a0a7-7ed8f9d61228"), 20, 950m, "HiltonLondonHotel", "family suite" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tours",
+                columns: new[] { "TourId", "AvailableSpaces", "Cost", "DurationInDays", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("8bc8d1ba-4388-4591-a2bb-621ed5720a51"), 20, 600m, 5, "Britain and Ireland Explorer" },
+                    { new Guid("8c114f4c-dfdc-4050-818b-e245f7e9a825"), 20, 600m, 5, "Real Britain" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "HotelAvailabilities",
+                columns: new[] { "HotelAvailabilityId", "AvailableFrom", "AvailableTo", "HotelId" },
+                values: new object[] { new Guid("8ef56834-9376-460a-8869-bec55817cc53"), new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 12, 23, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("c09fc506-a50c-45c1-871f-3e7fc9b74892") });
+
+            migrationBuilder.InsertData(
+                table: "TourAvailabilities",
+                columns: new[] { "TourAvailabilityId", "AvailableFrom", "AvailableTo", "TourId" },
+                values: new object[] { new Guid("03881b87-89e3-49e3-ba2d-6c6015967330"), new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), new Guid("8c114f4c-dfdc-4050-818b-e245f7e9a825") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -395,21 +394,6 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PackageBookings_HotelId",
-                table: "PackageBookings",
-                column: "HotelId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PackageBookings_TourId",
-                table: "PackageBookings",
-                column: "TourId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PackageBookings_UserId",
-                table: "PackageBookings",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TourAvailabilities_TourId",
                 table: "TourAvailabilities",
                 column: "TourId");
@@ -451,9 +435,6 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
 
             migrationBuilder.DropTable(
                 name: "HotelDiscounts");
-
-            migrationBuilder.DropTable(
-                name: "PackageBookings");
 
             migrationBuilder.DropTable(
                 name: "TourAvailabilities");

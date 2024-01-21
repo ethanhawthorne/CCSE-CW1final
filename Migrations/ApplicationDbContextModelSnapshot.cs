@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using asp_net_core_web_app_authentication_authorisation.Services;
+using My_Pacific_Tour_App.Services;
 
 #nullable disable
 
@@ -159,7 +159,278 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", b =>
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.Hotel", b =>
+                {
+                    b.Property<Guid>("HotelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AvailableSpaces")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoomType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("HotelId");
+
+                    b.ToTable("Hotels");
+
+                    b.HasData(
+                        new
+                        {
+                            HotelId = new Guid("00d9a7c5-0bef-4a11-99f2-d035a17875ea"),
+                            AvailableSpaces = 20,
+                            Cost = 375m,
+                            Name = "HiltonLondonHotel",
+                            RoomType = "single"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("b333930e-6fcc-4273-a2bf-9f5c6b026872"),
+                            AvailableSpaces = 20,
+                            Cost = 775m,
+                            Name = "HiltonLondonHotel",
+                            RoomType = "double"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("232deb8b-7105-45f0-873d-321a8d9e063d"),
+                            AvailableSpaces = 20,
+                            Cost = 950m,
+                            Name = "HiltonLondonHotel",
+                            RoomType = "family suite"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("dae80db6-641b-477c-a65b-e9fc7a070796"),
+                            AvailableSpaces = 20,
+                            Cost = 300m,
+                            Name = "LondonMarriotHotel",
+                            RoomType = "single"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("87fc9b97-e622-405a-9549-c4cd30899fd6"),
+                            AvailableSpaces = 20,
+                            Cost = 300m,
+                            Name = "LondonMarriotHotel",
+                            RoomType = "Double"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("0ccfbd3f-62ef-492e-94f6-af9d6369f114"),
+                            AvailableSpaces = 20,
+                            Cost = 300m,
+                            Name = "LondonMarriotHotel",
+                            RoomType = "family suite"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("49101899-236e-494a-8d34-d5fd69611f6a"),
+                            AvailableSpaces = 20,
+                            Cost = 300m,
+                            Name = "LondonMarriotHotel",
+                            RoomType = "single"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("f29a33df-deab-418d-ad96-228fe77b5742"),
+                            AvailableSpaces = 20,
+                            Cost = 300m,
+                            Name = "LondonMarriotHotel",
+                            RoomType = "double"
+                        },
+                        new
+                        {
+                            HotelId = new Guid("8af858a5-0a76-4f04-bb87-baba38293d68"),
+                            AvailableSpaces = 20,
+                            Cost = 300m,
+                            Name = "LondonMarriotHotel",
+                            RoomType = "family suite"
+                        });
+                });
+
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.HotelAvailability", b =>
+                {
+                    b.Property<Guid>("HotelAvailabilityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AvailableFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("AvailableTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("HotelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("HotelAvailabilityId");
+
+                    b.HasIndex("HotelId");
+
+                    b.ToTable("HotelAvailabilities");
+
+                    b.HasData(
+                        new
+                        {
+                            HotelAvailabilityId = new Guid("c1d4aea9-197f-41b4-bfeb-9c94fdbbea36"),
+                            AvailableFrom = new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AvailableTo = new DateTime(2024, 12, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            HotelId = new Guid("00d9a7c5-0bef-4a11-99f2-d035a17875ea")
+                        });
+                });
+
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.HotelBooking", b =>
+                {
+                    b.Property<Guid>("HotelBookingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CheckInDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CheckOutDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("HotelId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("HotelBookingId");
+
+                    b.HasIndex("HotelId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("HotelBookings");
+                });
+
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.Tour", b =>
+                {
+                    b.Property<Guid>("TourId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("AvailableSpaces")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("DurationInDays")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TourId");
+
+                    b.ToTable("Tours");
+
+                    b.HasData(
+                        new
+                        {
+                            TourId = new Guid("b80bd332-2779-49a3-8d79-4f931836dc46"),
+                            AvailableSpaces = 20,
+                            Cost = 600m,
+                            DurationInDays = 5,
+                            Name = "Real Britain"
+                        },
+                        new
+                        {
+                            TourId = new Guid("24011b1c-6e84-428e-95f4-0ab4fb1bc85f"),
+                            AvailableSpaces = 20,
+                            Cost = 600m,
+                            DurationInDays = 5,
+                            Name = "Britain and Ireland Explorer"
+                        });
+                });
+
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.TourAvailability", b =>
+                {
+                    b.Property<Guid>("TourAvailabilityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("AvailableFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("AvailableTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TourId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("TourAvailabilityId");
+
+                    b.HasIndex("TourId");
+
+                    b.ToTable("TourAvailabilities");
+
+                    b.HasData(
+                        new
+                        {
+                            TourAvailabilityId = new Guid("9bb45630-1e85-44ec-828a-297f10fb8980"),
+                            AvailableFrom = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            AvailableTo = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            TourId = new Guid("b80bd332-2779-49a3-8d79-4f931836dc46")
+                        });
+                });
+
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.TourBooking", b =>
+                {
+                    b.Property<Guid>("TourBookingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsCancelled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("TourEndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("TourId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("TourStartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("TourBookingId");
+
+                    b.HasIndex("TourId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TourBookings");
+                });
+
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -243,340 +514,6 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.Hotel", b =>
-                {
-                    b.Property<Guid>("HotelId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("AvailableSpaces")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoomType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HotelId");
-
-                    b.ToTable("Hotels");
-
-                    b.HasData(
-                        new
-                        {
-                            HotelId = new Guid("2c6a4da3-7570-4728-8adb-039a8ccf14df"),
-                            AvailableSpaces = 20,
-                            Cost = 375m,
-                            Name = "HiltonLondonHotel",
-                            RoomType = "single"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("36062ece-d128-4dab-9714-ca50137b19e5"),
-                            AvailableSpaces = 20,
-                            Cost = 775m,
-                            Name = "HiltonLondonHotel",
-                            RoomType = "double"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("5826782c-46b2-4bae-afe5-2887e4ec9f95"),
-                            AvailableSpaces = 20,
-                            Cost = 950m,
-                            Name = "HiltonLondonHotel",
-                            RoomType = "family suite"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("cffd5c3b-0e2b-4f1f-9074-1045f891c6e7"),
-                            AvailableSpaces = 20,
-                            Cost = 300m,
-                            Name = "LondonMarriotHotel",
-                            RoomType = "single"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("6e77bdf8-d9bb-4bae-a7d3-b87b9097a04a"),
-                            AvailableSpaces = 20,
-                            Cost = 300m,
-                            Name = "LondonMarriotHotel",
-                            RoomType = "Double"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("fd240acb-b00c-469d-84c6-28e7c528e09c"),
-                            AvailableSpaces = 20,
-                            Cost = 300m,
-                            Name = "LondonMarriotHotel",
-                            RoomType = "family suite"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("28b15918-33ea-40e5-9263-641c4b5c0cb5"),
-                            AvailableSpaces = 20,
-                            Cost = 300m,
-                            Name = "LondonMarriotHotel",
-                            RoomType = "single"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("10091c4b-164d-4048-9d25-85f03456afc5"),
-                            AvailableSpaces = 20,
-                            Cost = 300m,
-                            Name = "LondonMarriotHotel",
-                            RoomType = "double"
-                        },
-                        new
-                        {
-                            HotelId = new Guid("432704ae-ca38-455f-b4b3-4312ee4addda"),
-                            AvailableSpaces = 20,
-                            Cost = 300m,
-                            Name = "LondonMarriotHotel",
-                            RoomType = "family suite"
-                        });
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.HotelAvailability", b =>
-                {
-                    b.Property<Guid>("HotelAvailabilityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("AvailableFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("AvailableTo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("HotelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("HotelAvailabilityId");
-
-                    b.HasIndex("HotelId");
-
-                    b.ToTable("HotelAvailabilities");
-
-                    b.HasData(
-                        new
-                        {
-                            HotelAvailabilityId = new Guid("b610a9c3-49e3-4143-995a-fd40baec5958"),
-                            AvailableFrom = new DateTime(2024, 1, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AvailableTo = new DateTime(2024, 1, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            HotelId = new Guid("2c6a4da3-7570-4728-8adb-039a8ccf14df")
-                        });
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.HotelBooking", b =>
-                {
-                    b.Property<Guid>("HotelBookingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CheckInDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CheckOutDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("HotelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("HotelBookingId");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("HotelBookings");
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.HotelDiscount", b =>
-                {
-                    b.Property<Guid>("HotelDiscountId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("HotelDiscountPercentage")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("RoomType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HotelDiscountId");
-
-                    b.ToTable("HotelDiscounts");
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.PackageBooking", b =>
-                {
-                    b.Property<Guid>("PackageBookingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CheckInDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("CheckOutDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("HotelId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("TourEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("TourId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("TourStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("PackageBookingId");
-
-                    b.HasIndex("HotelId");
-
-                    b.HasIndex("TourId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("PackageBookings");
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.Tour", b =>
-                {
-                    b.Property<Guid>("TourId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("AvailableSpaces")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("DurationInDays")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("TourId");
-
-                    b.ToTable("Tours");
-
-                    b.HasData(
-                        new
-                        {
-                            TourId = new Guid("c78c99a4-a9de-4786-9c79-10788c0b4d97"),
-                            AvailableSpaces = 20,
-                            Cost = 600m,
-                            DurationInDays = 5,
-                            Name = "Real Britain"
-                        },
-                        new
-                        {
-                            TourId = new Guid("6a81339b-43f1-4c56-a09d-329d7d893d6d"),
-                            AvailableSpaces = 20,
-                            Cost = 600m,
-                            DurationInDays = 5,
-                            Name = "Britain and Ireland Explorer"
-                        });
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.TourAvailability", b =>
-                {
-                    b.Property<Guid>("TourAvailabilityId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("AvailableFrom")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("AvailableTo")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("TourId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("TourAvailabilityId");
-
-                    b.HasIndex("TourId");
-
-                    b.ToTable("TourAvailabilities");
-
-                    b.HasData(
-                        new
-                        {
-                            TourAvailabilityId = new Guid("308352ee-b4bb-44c7-89e7-085f89b70c3a"),
-                            AvailableFrom = new DateTime(2024, 1, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            AvailableTo = new DateTime(2024, 1, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            TourId = new Guid("c78c99a4-a9de-4786-9c79-10788c0b4d97")
-                        });
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.TourBooking", b =>
-                {
-                    b.Property<Guid>("TourBookingId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("TourEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("TourId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("TourStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("TourBookingId");
-
-                    b.HasIndex("TourId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("TourBookings");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -588,7 +525,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", null)
+                    b.HasOne("My_Pacific_Tour_App.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -597,7 +534,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", null)
+                    b.HasOne("My_Pacific_Tour_App.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -612,7 +549,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", null)
+                    b.HasOne("My_Pacific_Tour_App.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -621,16 +558,16 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", null)
+                    b.HasOne("My_Pacific_Tour_App.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.HotelAvailability", b =>
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.HotelAvailability", b =>
                 {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.Hotel", "Hotel")
+                    b.HasOne("My_Pacific_Tour_App.Models.Hotel", "Hotel")
                         .WithMany()
                         .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -639,55 +576,28 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                     b.Navigation("Hotel");
                 });
 
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.HotelBooking", b =>
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.HotelBooking", b =>
                 {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.Hotel", "Hotel")
+                    b.HasOne("My_Pacific_Tour_App.Models.Hotel", "Hotel")
                         .WithMany()
                         .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("My_Pacific_Tour_App.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ApplicationUser");
-
-                    b.Navigation("Hotel");
-                });
-
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.PackageBooking", b =>
-                {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.Hotel", "Hotel")
-                        .WithMany()
-                        .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.Tour", "Tour")
-                        .WithMany()
-                        .HasForeignKey("TourId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Hotel");
 
-                    b.Navigation("Tour");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.TourAvailability", b =>
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.TourAvailability", b =>
                 {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.Tour", "Tour")
+                    b.HasOne("My_Pacific_Tour_App.Models.Tour", "Tour")
                         .WithMany()
                         .HasForeignKey("TourId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -696,23 +606,23 @@ namespace asp_net_core_web_app_authentication_authorisation.Migrations
                     b.Navigation("Tour");
                 });
 
-            modelBuilder.Entity("asp_net_core_web_app_authentication_authorisation.Models.TourBooking", b =>
+            modelBuilder.Entity("My_Pacific_Tour_App.Models.TourBooking", b =>
                 {
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.Tour", "Tour")
+                    b.HasOne("My_Pacific_Tour_App.Models.Tour", "Tour")
                         .WithMany()
                         .HasForeignKey("TourId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("asp_net_core_web_app_authentication_authorisation.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("My_Pacific_Tour_App.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ApplicationUser");
-
                     b.Navigation("Tour");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

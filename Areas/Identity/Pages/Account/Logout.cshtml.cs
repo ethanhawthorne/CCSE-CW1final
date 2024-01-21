@@ -1,24 +1,20 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-#nullable disable
-
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using asp_net_core_web_app_authentication_authorisation.Models;
+﻿
+//#nullable disable
+using My_Pacific_Tour_App.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
-namespace asp_net_core_web_app_authentication_authorisation.Areas.Identity.Pages.Account
+namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
 {
+    //model is declared
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        //mostly given through scaffolding
+        private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LogoutModel> _logger;
 
-        public LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger)
+        public LogoutModel(SignInManager<User> signInManager, ILogger<LogoutModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
@@ -34,8 +30,7 @@ namespace asp_net_core_web_app_authentication_authorisation.Areas.Identity.Pages
             }
             else
             {
-                // This needs to be a redirect so that the browser performs a new
-                // request and the identity for the user gets updated.
+ //refreshes page
                 return RedirectToPage();
             }
         }

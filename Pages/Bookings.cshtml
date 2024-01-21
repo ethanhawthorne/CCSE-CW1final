@@ -4,12 +4,12 @@
     ViewData["Title"] = "Bookings";
 }
 
-<h2>Bookings</h2>
+<h2>Book a new Hotel or Trip</h2>
 <style>
     .tab {
         overflow: hidden;
         border: 1px solid #ccc;
-        background-color: #f1f1f1;
+        background-color: #E1AD01;
     }
 
         .tab button {
@@ -24,24 +24,23 @@
         }
 
             .tab button:hover {
-                background-color: #ddd;
+                background-color: green;
             }
 
             .tab button.active {
-                background-color: #ccc;
+                background-color:green;
             }
 
     .tabcontent {
         display: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
+        padding: 20px 12px;
+        border: 3px solid #ccc;
         border-top: none;
     }
 </style>
 <div class="tab">
     <button class="tablinks" onclick="openTab(event, 'Hotels')" id="HotelTab">Hotels</button>
     <button class="tablinks" onclick="openTab(event, 'Tours')" id="TourTab">Tours</button>
-    <button class="tablinks" onclick="openTab(event, 'Packages')" id="PackageTab">Packages</button>
 </div>
 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 <form id="hotelSearchForm" method="post" asp-page-handler="HotelSearch">
@@ -50,16 +49,16 @@
         <hr />
         <div class="form-group">
             <label asp-for="HotelSearch.CheckInDate">Select check-in date:</label>
-            <input id="hotelCheckInDate" asp-for="HotelSearch.CheckInDate" type="date" class="form-control" value="2024-01-09" />
+            <input id="hotelCheckInDate" asp-for="HotelSearch.CheckInDate" type="date" class="form-control" value="2024-01-14" />
             <span asp-validation-for="HotelSearch.CheckInDate" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="HotelSearch.CheckInDate">Select check-out date:</label>
-            <input id="hotelCheckOutDate" asp-for="HotelSearch.CheckOutDate" type="date" class="form-control" value="2024-01-27" />
+            <input id="hotelCheckOutDate" asp-for="HotelSearch.CheckOutDate" type="date" class="form-control" value="2024-01-23" />
             <span asp-validation-for="HotelSearch.CheckOutDate" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="HotelSearch.RoomType">Select room type:</label>
+            <label asp-for="HotelSearch.RoomType">Pick a RoomType:</label>
             <select asp-for="HotelSearch.RoomType" asp-items="@Model.HotelSearch.RoomTypes" class="form-control"></select>
             <span asp-validation-for="HotelSearch.RoomType" class="text-danger"></span>
         </div>
@@ -99,7 +98,7 @@
             <span asp-validation-for="TourSearch.TourEndDate" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label for="tours">Tours:</label>
+            <label for="tours">Tour:</label>
             <select name="tours" id="toursDropdown" onchange='calculateTotalCost("toursDropdown", "tourStartDate", "tourEndDate", "tourTotalCostMessage")'>
                 @foreach (var tour in Model.TourSearch.ToursList)
                 {
@@ -119,71 +118,7 @@
     </div>
 </form>
 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-<form id="packageBookForm" method="post" asp-page-handler="PackageBook">
-    <div id="Packages" class="tabcontent">
-        <h3>Packages</h3>
-        <hr />
-        <h4>Search Hotels</h4>
-        <hr />
-        <div class="form-group">
-            <label asp-for="PackageBook.CheckInDate">Select check-in date:</label>
-            <input id="packageHotelCheckInDate" asp-for="PackageBook.CheckInDate" type="date" class="form-control" value="2024-01-09" />
-            <span asp-validation-for="PackageBook.CheckInDate" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="PackageBook.CheckInDate">Select check-out date:</label>
-            <input id="packageHotelCheckOutDate" asp-for="PackageBook.CheckOutDate" type="date" class="form-control" value="2024-01-27" />
-            <span asp-validation-for="PackageBook.CheckOutDate" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="PackageBook.RoomType">Select room type:</label>
-            <select asp-for="PackageBook.RoomType" asp-items="@Model.PackageBook.RoomTypes" class="form-control"></select>
-            <span asp-validation-for="PackageBook.RoomType" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="packageHotels">Hotels:</label>
-            <select name="packageHotelsDropdown" id="packageHotelsDropdownId" onchange='calculateTotalPackageCost()'>
-                @foreach (var hotel in Model.PackageBook.HotelsList)
-                {
-                    <option value="@hotel.HotelId">@(hotel.Name + " £" + hotel.Cost)</option>
-                }
-            </select>
-            <p id="packageHotelsDropdownErrorMessage" class="text-danger"></p>
-        </div>
-        <hr />
-        <h4>Search Tours</h4>
-        <hr />
-        <div class="form-group">
-            <label asp-for="PackageBook.TourStartDate">Select Tour Start Date:</label>
-            <input id="packageTourStartDate" asp-for="PackageBook.TourStartDate" type="date" class="form-control" value="2024-01-15" />
-            <span asp-validation-for="PackageBook.TourEndDate" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label asp-for="PackageBook.TourEndDate">Select Tour End Date:</label>
-            <input id="packageTourEndDate" asp-for="PackageBook.TourEndDate" type="date" class="form-control" value="2024-01-20" />
-            <span asp-validation-for="PackageBook.TourEndDate" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <label for="packageTours">Tours:</label>
-            <select name="packageToursDropdown" id="packageToursDropdownId" onchange='calculateTotalPackageCost()'>
-                @foreach (var tour in Model.PackageBook.ToursList)
-                {
-                    <option value="@tour.TourId">@(tour.Name + " £" + tour.Cost)</option>
-                }
-            </select>
-            <p id="packageToursDropdownErrorMessage" class="text-danger"></p>
-        </div>
-        <hr />
-        <div class="form-group">
-            <input type="submit" name="command" class="btn btn-primary" value="Search" />
-        </div>
-        <hr />
-        <p id="packageTotalCostMessage">Total Cost: £0</p>
-        <div class="form-group">
-            <input class="btn btn-primary" name="command" value="Book" onclick="submitPackageBookForm()" />
-        </div>
-    </div>
-</form>
+
 <script>
     function openTab(evt, tabName) {
         var i, tabcontent, tablinks;
@@ -209,9 +144,7 @@
         case "TourSearch":
             document.getElementById("TourTab").click();
             break;
-        case "PackageBook":
-            document.getElementById("PackageTab").click();
-            break;
+
         default:
             break;
     }
@@ -248,37 +181,7 @@
         form.submit();
     }
 
-    function submitPackageBookForm() { 
-        var hotelsDropdownErrorMessage = document.getElementById("packageHotelsDropdownErrorMessage");
-        hotelsDropdownErrorMessage.innerHTML = "";
 
-        var toursDropdownErrorMessage = document.getElementById("packageToursDropdownErrorMessage");
-        toursDropdownErrorMessage.innerHTML = "";
-
-        var form = document.getElementById("packageBookForm");
-
-        var hotelsSelectBoxValue = form.elements["packageHotelsDropdown"].value;
-        var toursSelectBoxValue = form.elements["packageToursDropdown"].value;
-
-        var errorReturn = false;
-
-        if (!hotelsSelectBoxValue) { 
-            hotelsDropdownErrorMessage.innerHTML = "Please select a hotel for booking";
-            errorReturn = true;
-        }
-
-        if (!toursSelectBoxValue) { 
-            toursDropdownErrorMessage.innerHTML = "Please select a tour for booking";
-            errorReturn = true;
-        }
-
-        if (errorReturn) { 
-            return;
-        }
-
-        form.elements["command"].value = "Book";
-        form.submit();
-    }
 
     function calculateTotal(dropdown, fromDate, toDate) {
         var selectedDropdown = document.getElementById(dropdown);
@@ -297,14 +200,7 @@
         document.getElementById(totalCostMessageId).innerHTML = "Total Cost: £" + calculateTotal(dropdown, fromDate, toDate);
     }
 
-    function calculateTotalPackageCost() { 
-        var packageHotelCost = calculateTotal("packageHotelsDropdownId", "packageHotelCheckInDate", "packageHotelCheckOutDate");
-        var packageTourCost = calculateTotal("packageToursDropdownId", "packageTourStartDate", "packageTourEndDate");
 
-        var packageTotalCost = packageHotelCost + packageTourCost
-
-        document.getElementById("packageTotalCostMessage").innerHTML = "Total Cost: £" + packageTotalCost;
-    }
 
     window.addEventListener('load', function () {
         if (document.getElementById("HotelTab").className == "tablinks active") {
@@ -312,9 +208,6 @@
         }
         else if (document.getElementById("TourTab").className == "tablinks active") {
             calculateTotalCost("toursDropdown", "tourStartDate", "tourEndDate", "tourTotalCostMessage");
-        }
-        else if (document.getElementById("PackageTab").className == "tablinks active") {
-            calculateTotalPackageCost();
         }
     });
 

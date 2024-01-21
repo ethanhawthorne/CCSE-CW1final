@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace asp_net_core_web_app_authentication_authorisation.Models
+namespace My_Pacific_Tour_App.Models
 {
-    public class ApplicationUser : IdentityUser
+    //This represents the class "User" that holds the properties i will be manipulating throughout the project
+
+    public class User : IdentityUser
     {
         public String FirstName { get; set; } = "";
         public String LastName { get; set; } = "";

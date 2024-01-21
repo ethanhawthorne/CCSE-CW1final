@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace asp_net_core_web_app_authentication_authorisation.Pages
+namespace My_Pacific_Tour_App.Pages
 {
     public class PrivacyModel : PageModel
     {
