@@ -9,7 +9,7 @@
         public DateTime AvailableFrom { get; set; }
         public DateTime AvailableTo { get; set; }
 
-        // Navigation properties
+        //This is for navigation
         public Hotel Hotel { get; set; }
     }
 }

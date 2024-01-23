@@ -22,7 +22,8 @@ using Microsoft.Extensions.Logging;
 
 namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
 {
-    //mostly given throuhg scaffolding with some changes
+    //mostly given through scaffolding with some changes, this section initializes various dependencies 
+    //and services
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<User> _signInManager;
@@ -47,31 +48,18 @@ namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+
         [BindProperty]
         public InputModel Input { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public string ReturnUrl { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
-        /// <summary>
-        ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-        ///     directly from your code. This API may change or be removed in future releases.
-        /// </summary>
+        //input model for the user registration
         public class InputModel
         {
+            //all fields are required meaning they cant be left empty
             [Required]
             public string FirstName { get; set; }
 
@@ -87,29 +75,25 @@ namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
             [Required]
             public string PassportNumber { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+
+            //email and password have a bit more as they are used for login
+            //The [EmailAddress] part forces the input to be formatted a certain way
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            //This line means that the pass word (0) must be at least 6 characters(2) and max 80(1)
+            [StringLength(80, ErrorMessage = "The input {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            //makes the inputed characters unreadable
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
 
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
+
+            //just compares each of the inputted passwords 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
@@ -125,10 +109,13 @@ namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            //goes back to the default if its null
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            //model state is valid so no validation errors
             if (ModelState.IsValid)
             {
+                //creates new user using the given inputs
                 var user = new User()
                 {
                     FirstName = Input.FirstName,
@@ -141,12 +128,15 @@ namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
                     PassportNumber = Input.PassportNumber
                 };
 
+
+                //attempts to create user
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    //log info about the creation
                     _logger.LogInformation("User created a new account with password.");
-
+                    //This was generated but not implemented
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -158,7 +148,7 @@ namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    //generated not implemented
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
@@ -176,7 +166,7 @@ namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
             }
             return Page();
         }
-
+        //generated
         private User CreateUser()
         {
             try
@@ -190,7 +180,7 @@ namespace My_Pacific_Tour_App.Areas.Identity.Pages.Account
                     $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
             }
         }
-
+        //generated
         private IUserEmailStore<User> GetEmailStore()
         {
             if (!_userManager.SupportsUserEmail)

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34031.279
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ThePacificToursApplications", "ThePacificToursApplications.vbproj", "{146F8617-2C22-4386-A0AD-28A63A04B406}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{146F8617-2C22-4386-A0AD-28A63A04B406}.Debug|x86.ActiveCfg = Debug|x86
+		{146F8617-2C22-4386-A0AD-28A63A04B406}.Debug|x86.Build.0 = Debug|x86
+		{146F8617-2C22-4386-A0AD-28A63A04B406}.Release|x86.ActiveCfg = Release|x86
+		{146F8617-2C22-4386-A0AD-28A63A04B406}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {644614B2-6177-449F-B86E-EA70A18EE7B3}
+	EndGlobalSection
+EndGlobal

@@ -12,7 +12,7 @@
         public bool IsCancelled { get; set; } = false;
         public bool IsPaid { get; set; } = false;
 
-        // Navigation properties
+        //This is for navigation
         public Hotel Hotel { get; set; }
         public User User { get; set; }
     }

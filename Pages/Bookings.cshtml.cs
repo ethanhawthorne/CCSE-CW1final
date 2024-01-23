@@ -9,23 +9,25 @@ using System.ComponentModel.DataAnnotations;
 
 namespace My_Pacific_Tour_App.Pages
 {
-    //Binds to the relevant razor page
     public class BookingsModel : PageModel
     {
+        //binds the pro search models to the hotel and tour search input
         [BindProperty]
         public HotelSearchModel HotelSearch { get; set; }
-
         [BindProperty]
         public TourSearchModel TourSearch { get; set; }
 
-
+        //accessing the database
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<User> _userManager;
-        // Initializes and sets context through dependancy injection
+
+        // Constructor method with two parameters dbcontext for database and user manager for user access
         public BookingsModel(ApplicationDbContext dbContext, UserManager<User> userManager)
         { 
+            //Prepares the model to handle hotel and tour related search data
             HotelSearch = new HotelSearchModel();
             TourSearch = new TourSearchModel();
+            // for database interaction
             _dbContext = dbContext;
             _userManager = userManager;
         }
@@ -85,57 +87,7 @@ namespace My_Pacific_Tour_App.Pages
 
             public List<Tour> ToursList { get; set; } = new List<Tour>();
         }
-        //more validation
-        public class PackageBookModel
-        {
-            [Required(ErrorMessage = "Please select a check-in date")]
-            [DataType(DataType.DateTime)]
-            [Display(Name = "Check in date")]
-            public DateTime CheckInDate { get; set; }
 
-            [Required(ErrorMessage = "Please select a check-out date")]
-            [DataType(DataType.DateTime)]
-            [Display(Name = "Check out date")]
-            public DateTime CheckOutDate { get; set; }
-
-            [Required(ErrorMessage = "Please select a room type")]
-            [DataType(DataType.Text)]
-            [Display(Name = "Room type")]
-            public string RoomType { get; set; } = "Single";
-            //list choices
-            public List<SelectListItem> RoomTypes { get; set; } = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Value = "single",
-                    Text = "Single"
-                },
-                new SelectListItem
-                {
-                    Value = "double",
-                    Text = "Double"
-                },
-                new SelectListItem
-                {
-                    Value = "family suite",
-                    Text = "Family Suite"
-                }
-            };
-            //validation
-            public List<Hotel> HotelsList { get; set; } = new List<Hotel>();
-
-            [Required(ErrorMessage = "Please select a tour start date")]
-            [DataType(DataType.DateTime)]
-            [Display(Name = "Tour start date")]
-            public DateTime TourStartDate { get; set; }
-
-            [Required(ErrorMessage = "Please select a tour end date")]
-            [DataType(DataType.DateTime)]
-            [Display(Name = "Tour end date")]
-            public DateTime TourEndDate { get; set; }
-
-            public List<Tour> ToursList { get; set; } = new List<Tour>();
-        }
         //seaches for relevant hotels
         public async Task<IActionResult> OnPostHotelSearchAsync(string command, string returnUrl = null)
         {
@@ -200,26 +152,32 @@ namespace My_Pacific_Tour_App.Pages
             {
                 return Page();
             }
-
+            //button press is search
             if (command == "Search")
             {
+                //finds tours with relevant criteria
                 var availableTours = await _dbContext.TourAvailabilities
                 .Where(ta =>
-                    ta.AvailableFrom <= TourSearch.TourStartDate && ta.AvailableTo >= TourSearch.TourEndDate)
+                    ta.AvailableFrom <= TourSearch.TourStartDate && 
+                    ta.AvailableTo >= TourSearch.TourEndDate)
                 .Select(ta => ta.Tour)
                 .Distinct()
                 .ToListAsync();
-
+                //populate tour list with available tours
                 TourSearch.ToursList = availableTours;
+                //return the page
 
                 return Page();
             }
+            // else the book button is pressed and so this will go through the booking process
             else
             {
+                //gets current users and tours
                 var SelectedTourId = new Guid(Request.Form["tours"]);
                 var CurrentUser = await _userManager.GetUserAsync(User);
                 Tour SelectedTour = await _dbContext.Tours.FindAsync(SelectedTourId);
 
+                //writes new booking
                 var tourBooking = new TourBooking
                 {
                     TourBookingId = new Guid(),
@@ -230,10 +188,10 @@ namespace My_Pacific_Tour_App.Pages
                     Tour = SelectedTour,
                     User = CurrentUser
                 };
-
+                //adds to the database
                 _dbContext.TourBookings.Add(tourBooking);
                 await _dbContext.SaveChangesAsync();
-
+                // takes the user to the payment page
                 return RedirectToPage("/Payment", new
                 {
                     bookingId = tourBooking.TourBookingId.ToString(),

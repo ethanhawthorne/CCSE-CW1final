@@ -12,7 +12,7 @@
         public bool IsCancelled { get; set; } = false;
         public bool IsPaid { get; set; } = false;
 
-        // Navigation properties
+        //THis is for Navigation 
         public Tour Tour { get; set; }
         public User User { get; set; }
     }

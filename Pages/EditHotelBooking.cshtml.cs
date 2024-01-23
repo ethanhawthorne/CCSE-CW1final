@@ -44,22 +44,25 @@ namespace My_Pacific_Tour_App.Pages
             public string HotelBookingId { get; set; }
 
         }
-        // Retrieves the query parameters and populates the model with relevent data
+        // HTTP get for viewing or editing a hotel booking
         public async Task<IActionResult> OnGet()
         {
+            //Extract the hotel booking id parameter from the query
             var HotelBookingIdValue = Request.Query["hotelBookingId"];
+            //convert ID to GUID
             var HotelBookingId = new Guid(HotelBookingIdValue.ToString());
-
+            //Retrieve the corresponding hotel booking from the database
             var hotelBooking = await _dbContext.HotelBookings
                 .Where(hb => hb.HotelBookingId == HotelBookingId)
                 .Include(hb => hb.Hotel)
                 .FirstOrDefaultAsync();
-
+            //populate the edit booking with details from the retrieved hotel
             EditBooking.CheckInDate = hotelBooking.CheckInDate;
             EditBooking.CheckOutDate = hotelBooking.CheckOutDate;
             EditBooking.RoomType = hotelBooking.Hotel.RoomType;
             EditBooking.HotelsList.Add(hotelBooking.Hotel);
 
+            //Set the hotel booking ID property of the editbooking model with the value from the query string
             EditBooking.HotelBookingId = HotelBookingIdValue;
 
             return Page();
@@ -88,7 +91,7 @@ namespace My_Pacific_Tour_App.Pages
                 .Distinct()
                 .ToListAsync();
             //This for if the availability has one spcae
-            if (HotelAvailability.Count == 1)
+            if (HotelAvailability.Count >= 1)
             {
                 HotelBooking.CheckInDate = EditBooking.CheckInDate;
                 HotelBooking.CheckOutDate = EditBooking.CheckOutDate;
@@ -105,12 +108,9 @@ namespace My_Pacific_Tour_App.Pages
             else
             //if theres no spaces available
             {
+                //error if there is no space
                 EditBooking.ErrorMessage = "Hotels not available for selected dates";
-                //change model to give most recent info
-                EditBooking.HotelsList.Add(HotelBooking.Hotel);
-                EditBooking.CheckInDate = EditBooking.CheckInDate;
-                EditBooking.CheckOutDate = EditBooking.CheckOutDate;
-                EditBooking.RoomType = HotelBooking.Hotel.RoomType;
+
 
                 return Page();
             }

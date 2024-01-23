@@ -104,10 +104,6 @@ namespace My_Pacific_Tour_App.Pages
             {
                 EditBooking.ErrorMessage = "Tours not available for selected dates";
 
-                EditBooking.ToursList.Add(TourBooking.Tour);
-                EditBooking.TourStartDate = EditBooking.TourStartDate;
-                EditBooking.TourEndDate = EditBooking.TourEndDate;
-
                 return Page();
             }
         }
